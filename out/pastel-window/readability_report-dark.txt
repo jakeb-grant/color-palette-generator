@@ -1,0 +1,73 @@
+======================================================================
+READABILITY REPORT
+======================================================================
+Theme: DARK
+Background:       #1c2a30 (L: 14.9%, S: 26.3%)
+Background Med:   #23353c (L: 18.6%, S: 26.3%)
+Background Light: #2b4049 (L: 22.7%, S: 25.9%)
+
+
+FOREGROUND (bright) (min: 5.0:1)
+--------------------------------------------------
+  foreground_bright #efe8e5  vs bg: 12.2:1  vs bg_light:  9.0:1  ✓
+
+FOREGROUND (main) (min: 5.0:1)
+--------------------------------------------------
+  foreground     #e0d2cc  vs bg: 10.0:1  vs bg_light:  7.4:1  ✓
+  foreground_medium #d4c1b8  vs bg:  8.5:1  vs bg_light:  6.3:1  ✓
+
+FOREGROUND (dim) (min: 4.0:1)
+--------------------------------------------------
+  foreground_dim #c8b0a5  vs bg:  7.2:1  vs bg_light:  5.3:1  ✓
+
+ACCENTS (min: 4.0:1)
+--------------------------------------------------
+  primary        #eeaa8c  vs bg:  7.6:1  vs bg_light:  5.6:1  ✓
+  primary_variant #f6dbd0  vs bg: 11.2:1  vs bg_light:  8.3:1  ✓
+  secondary      #32ccae  vs bg:  7.3:1  vs bg_light:  5.4:1  ✓
+  secondary_variant #73d7c3  vs bg:  8.6:1  vs bg_light:  6.3:1  ✓
+
+HIGHLIGHT (min: 4.5:1)
+--------------------------------------------------
+  tertiary       #7cc552  vs bg:  7.0:1  vs bg_light:  5.2:1  ✓
+
+SEMANTIC (min: 4.5:1)
+--------------------------------------------------
+  error          #e59191  vs bg:  6.2:1  vs bg_light:  4.5:1  ✓
+  warning        #dca13b  vs bg:  6.5:1  vs bg_light:  4.8:1  ✓
+  success        #4ac34a  vs bg:  6.5:1  vs bg_light:  4.8:1  ✓
+  info           #61b0d8  vs bg:  6.1:1  vs bg_light:  4.5:1  ✓
+
+TERMINAL BASE (min: 4.0:1)
+--------------------------------------------------
+  red            #e59191  vs bg:  6.2:1  vs bg_light:  4.5:1  ✓
+  green          #4ac34a  vs bg:  6.5:1  vs bg_light:  4.8:1  ✓
+  yellow         #dca13b  vs bg:  6.5:1  vs bg_light:  4.8:1  ✓
+  blue           #7ba4b1  vs bg:  5.5:1  vs bg_light:  4.0:1  ✓
+  magenta        #fda57e  vs bg:  7.6:1  vs bg_light:  5.6:1  ✓
+  cyan           #7ba4b1  vs bg:  5.5:1  vs bg_light:  4.0:1  ✓
+  white          #c8b0a5  vs bg:  7.2:1  vs bg_light:  5.3:1  ✓
+
+TERMINAL BRIGHT (min: 4.0:1)
+--------------------------------------------------
+  red_bright     #f0c2c2  vs bg:  9.3:1  vs bg_light:  6.8:1  ✓
+  green_bright   #83d683  vs bg:  8.4:1  vs bg_light:  6.2:1  ✓
+  yellow_bright  #e5b96e  vs bg:  8.1:1  vs bg_light:  5.9:1  ✓
+  blue_bright    #abc5cd  vs bg:  8.2:1  vs bg_light:  6.0:1  ✓
+  magenta_bright #fed9c9  vs bg: 11.2:1  vs bg_light:  8.3:1  ✓
+  cyan_bright    #abc5cd  vs bg:  8.2:1  vs bg_light:  6.0:1  ✓
+  white_bright   #e0d2cc  vs bg: 10.0:1  vs bg_light:  7.4:1  ✓
+
+TERMINAL DIM (min: 4.0:1)
+--------------------------------------------------
+  red_dim        #d98a8a  vs bg:  5.6:1  vs bg_light:  4.1:1  ✓
+  green_dim      #57b757  vs bg:  5.8:1  vs bg_light:  4.3:1  ✓
+  yellow_dim     #cd9537  vs bg:  5.6:1  vs bg_light:  4.1:1  ✓
+  blue_dim       #90a7ae  vs bg:  5.8:1  vs bg_light:  4.3:1  ✓
+  magenta_dim    #f28150  vs bg:  5.6:1  vs bg_light:  4.2:1  ✓
+  cyan_dim       #90a7ae  vs bg:  5.8:1  vs bg_light:  4.3:1  ✓
+  white_dim      #b39a90  vs bg:  5.6:1  vs bg_light:  4.1:1  ✓
+
+======================================================================
+ALL COLORS PASS CONTRAST REQUIREMENTS ✓
+======================================================================

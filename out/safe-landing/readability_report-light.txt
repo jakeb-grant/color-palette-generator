@@ -1,0 +1,78 @@
+======================================================================
+READABILITY REPORT
+======================================================================
+Theme: LIGHT
+Background:       #e7e9e1 (L: 89.8%, S: 15.4%)
+Background Med:   #dfe2d8 (L: 86.7%, S: 14.7%)
+Background Light: #d8dccf (L: 83.7%, S: 15.7%)
+
+
+FOREGROUND (bright) (min: 5.0:1)
+--------------------------------------------------
+  foreground_bright #2e1c27  vs bg: 13.1:1  vs bg_light: 11.5:1  ✓
+
+FOREGROUND (main) (min: 5.0:1)
+--------------------------------------------------
+  foreground     #492c3e  vs bg: 10.0:1  vs bg_light:  8.8:1  ✓
+  foreground_medium #5c374e  vs bg:  8.1:1  vs bg_light:  7.1:1  ✓
+
+FOREGROUND (dim) (min: 4.0:1)
+--------------------------------------------------
+  foreground_dim #6f435e  vs bg:  6.5:1  vs bg_light:  5.7:1  ✓
+
+ACCENTS (min: 4.0:1)
+--------------------------------------------------
+  primary        #e33c4d  vs bg:  3.4:1  vs bg_light:  3.0:1  ✗ FAIL
+  primary_variant #b21f2e  vs bg:  5.5:1  vs bg_light:  4.8:1  ✓
+  secondary      #e46b42  vs bg:  2.6:1  vs bg_light:  2.3:1  ✗ FAIL
+  secondary_variant #b84720  vs bg:  4.3:1  vs bg_light:  3.8:1  ✗ FAIL
+
+HIGHLIGHT (min: 4.5:1)
+--------------------------------------------------
+  tertiary       #714b0f  vs bg:  6.3:1  vs bg_light:  5.5:1  ✓
+
+SEMANTIC (min: 4.5:1)
+--------------------------------------------------
+  error          #b22626  vs bg:  5.4:1  vs bg_light:  4.7:1  ✓
+  warning        #805816  vs bg:  5.2:1  vs bg_light:  4.5:1  ✓
+  success        #236c23  vs bg:  5.3:1  vs bg_light:  4.6:1  ✓
+  info           #216488  vs bg:  5.3:1  vs bg_light:  4.6:1  ✓
+
+TERMINAL BASE (min: 4.0:1)
+--------------------------------------------------
+  red            #b22626  vs bg:  5.4:1  vs bg_light:  4.7:1  ✓
+  green          #236c23  vs bg:  5.3:1  vs bg_light:  4.6:1  ✓
+  yellow         #805816  vs bg:  5.2:1  vs bg_light:  4.5:1  ✓
+  blue           #2b6989  vs bg:  4.9:1  vs bg_light:  4.3:1  ✓
+  magenta        #c5071a  vs bg:  5.0:1  vs bg_light:  4.4:1  ✓
+  cyan           #356466  vs bg:  5.4:1  vs bg_light:  4.8:1  ✓
+  white          #e7e9e1  vs bg:  1.0:1  vs bg_light:  1.1:1  ✗ FAIL
+
+TERMINAL BRIGHT (min: 4.0:1)
+--------------------------------------------------
+  red_bright     #c12929  vs bg:  4.7:1  vs bg_light:  4.2:1  ✓
+  green_bright   #267526  vs bg:  4.7:1  vs bg_light:  4.1:1  ✓
+  yellow_bright  #7e5615  vs bg:  5.3:1  vs bg_light:  4.7:1  ✓
+  blue_bright    #296583  vs bg:  5.2:1  vs bg_light:  4.6:1  ✓
+  magenta_bright #be0618  vs bg:  5.3:1  vs bg_light:  4.7:1  ✓
+  cyan_bright    #396b6e  vs bg:  4.9:1  vs bg_light:  4.3:1  ✓
+  white_bright   #f2f3ef  vs bg:  1.1:1  vs bg_light:  1.3:1  ✗ FAIL
+
+TERMINAL DIM (min: 4.0:1)
+--------------------------------------------------
+  red_dim        #b53535  vs bg:  4.9:1  vs bg_light:  4.3:1  ✓
+  green_dim      #2f722f  vs bg:  4.8:1  vs bg_light:  4.2:1  ✓
+  yellow_dim     #876121  vs bg:  4.6:1  vs bg_light:  4.0:1  ✓
+  blue_dim       #33647e  vs bg:  5.2:1  vs bg_light:  4.6:1  ✓
+  magenta_dim    #cb1225  vs bg:  4.7:1  vs bg_light:  4.1:1  ✓
+  cyan_dim       #446769  vs bg:  5.1:1  vs bg_light:  4.4:1  ✓
+  white_dim      #5f604f  vs bg:  5.2:1  vs bg_light:  4.6:1  ✓
+
+======================================================================
+ISSUES FOUND: 5
+  - primary: #e33c4d has 3.0:1, needs 4.0:1
+  - secondary: #e46b42 has 2.3:1, needs 4.0:1
+  - secondary_variant: #b84720 has 3.8:1, needs 4.0:1
+  - white: #e7e9e1 has 1.0:1, needs 4.0:1
+  - white_bright: #f2f3ef has 1.1:1, needs 4.0:1
+======================================================================
