@@ -5,10 +5,11 @@ Generate functional color palettes from images for Zed editor themes (and other 
 ## Features
 
 - **Dual theme output** - Generates both dark and light themes from a single image
+- **Transparent blur themes** - Auto-generates blur variants with contrast-safe transparency
 - **WCAG contrast enforcement** - All text colors meet minimum contrast ratios
 - **24 terminal colors** - Base, bright, and dim variants for full terminal support
 - **Smart border colors** - Blends toward accent colors when compatible, stays subtle when not
-- **Zed theme output** - Ready-to-use JSON theme file for Zed editor
+- **Zed theme output** - Ready-to-use JSON theme files for Zed editor
 - **HTML preview** - Visual preview of the generated palette
 
 ## Installation
@@ -38,6 +39,9 @@ color-palette-generator my-wallpaper.png
 
 # Specify output directory
 color-palette-generator my-wallpaper.png ./my-theme/
+
+# Override blur theme opacity (0.0-1.0)
+color-palette-generator my-wallpaper.png ./my-theme/ --opacity 0.85
 ```
 
 ## Output Files
@@ -46,7 +50,8 @@ For an image named `my-wallpaper.png`, the generator creates:
 
 ```
 output_directory/
-├── my-wallpaper.json          # Zed theme (both dark & light variants)
+├── my-wallpaper.json          # Zed theme (opaque, dark & light variants)
+├── my-wallpaper-blur.json     # Zed theme (transparent blur, dark & light variants)
 ├── palette-dark.json          # Dark palette values
 ├── palette-light.json         # Light palette values
 ├── palette_preview-dark.html  # Visual preview (dark)
@@ -54,6 +59,16 @@ output_directory/
 ├── readability_report-dark.txt
 └── readability_report-light.txt
 ```
+
+## Blur Themes
+
+The generator automatically creates transparent blur variants (`*-blur.json`) with:
+
+- **`background.appearance: "blurred"`** - Enables Zed's blur effect
+- **Auto-calculated opacity** - Uses binary search to find the maximum transparency that maintains WCAG contrast against worst-case wallpapers (white for dark themes, black for light themes)
+- **Cascading transparency** - Main surfaces use base opacity, overlapping elements (tabs) use 50% of base to layer properly
+
+Use the `--opacity` flag to override the auto-calculated value if desired.
 
 ## Palette Structure
 

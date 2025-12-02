@@ -197,6 +197,124 @@ def is_accent_compatible(bg_color, accent_color, max_hue_diff=60, max_sat_diff=4
     return hue_diff <= max_hue_diff and sat_diff <= max_sat_diff and light_diff <= 50
 
 
+def opacity_to_hex(opacity):
+    """Convert 0.0-1.0 opacity to hex string (00-ff)."""
+    clamped = max(0.0, min(1.0, opacity))
+    return f"{int(clamped * 255):02x}"
+
+
+def blend_color_with_opacity(bg_color, wallpaper_rgb, opacity):
+    """
+    Calculate the blended color when bg_color is shown at given opacity over wallpaper.
+    Returns a new Color with the blended RGB values.
+    """
+    bg_r, bg_g, bg_b = bg_color.rgb
+    wp_r, wp_g, wp_b = wallpaper_rgb
+
+    blended_r = int(bg_r * opacity + wp_r * (1 - opacity))
+    blended_g = int(bg_g * opacity + wp_g * (1 - opacity))
+    blended_b = int(bg_b * opacity + wp_b * (1 - opacity))
+
+    return create_color(blended_r, blended_g, blended_b)
+
+
+def calculate_safe_opacity(bg_color, fg_color, min_contrast, is_dark_theme):
+    """
+    Calculate the minimum opacity that maintains contrast with worst-case wallpaper.
+
+    For dark themes: worst case is white wallpaper (#ffffff)
+    For light themes: worst case is black wallpaper (#000000)
+
+    Uses binary search to find the minimum opacity where:
+        contrast(blended_bg, fg) >= min_contrast
+
+    Returns opacity value 0.0-1.0 (higher = more opaque)
+    """
+    # Worst case wallpaper
+    wallpaper_rgb = (255, 255, 255) if is_dark_theme else (0, 0, 0)
+
+    low, high = 0.0, 1.0
+    result = 1.0  # Default to fully opaque if we can't find a solution
+
+    for _ in range(50):  # Binary search iterations
+        mid = (low + high) / 2
+
+        blended = blend_color_with_opacity(bg_color, wallpaper_rgb, mid)
+        achieved_contrast = contrast_ratio(blended.luminance, fg_color.luminance)
+
+        if achieved_contrast >= min_contrast:
+            result = mid
+            high = mid  # Try for more transparency (lower opacity)
+        else:
+            low = mid  # Need more opacity
+
+        if high - low < 0.001:
+            break
+
+    return result
+
+
+def calculate_theme_opacity(palette, is_dark_theme):
+    """
+    Calculate optimal opacity for a theme based on contrast preservation.
+    Uses the lowest-contrast text (foreground_dim) to ensure all text remains readable.
+
+    Returns opacity value 0.0-1.0
+    """
+    bg = palette["background"]
+    fg_dim = palette["foreground_dim"]
+
+    # Use MIN_DIM_CONTRAST as the threshold since that's our lowest acceptable contrast
+    opacity = calculate_safe_opacity(bg, fg_dim, MIN_DIM_CONTRAST, is_dark_theme)
+
+    # Add a small safety margin (5% more opaque)
+    opacity = min(1.0, opacity + 0.05)
+
+    return opacity
+
+
+def calculate_layered_opacities(editor_target):
+    """
+    Calculate opacity values for the layered transparency system.
+
+    The hierarchy (dark theme, darkest to lightest):
+    - Editor area = most opaque (editor_target)
+    - Panels = medium (global background alone)
+    - Title/status bars = lightest (5% more transparent than editor)
+
+    Stacking: editor_target = global + editor_layer × (1 - global)
+
+    Returns dict with opacity values (0.0-1.0) for each layer.
+    """
+    # Global background (panels) is 95% of editor target (5% more transparent)
+    global_opacity = editor_target * 0.95
+
+    # Editor layer combines with global to reach editor_target
+    # editor_target = global + editor_layer × (1 - global)
+    # editor_layer = (editor_target - global) / (1 - global)
+    if global_opacity < 1.0:
+        editor_layer = (editor_target - global_opacity) / (1 - global_opacity)
+    else:
+        editor_layer = 0.0
+
+    # Title/status bars are 5% more transparent than editor target (standalone)
+    title_status_opacity = editor_target * 0.95
+
+    # Tab bar stacks on global, should match editor combined opacity
+    # So tab_bar_layer uses same calculation as editor_layer
+    tab_bar_layer = editor_layer
+
+    return {
+        "global": global_opacity,  # background (panels inherit this)
+        "editor_layer": editor_layer,  # editor.background, editor.gutter.background
+        "tab_bar_layer": tab_bar_layer,  # tab_bar.background
+        "tab_layer": editor_layer
+        * 0.5,  # tab.active/inactive (50% of editor layer for subtlety)
+        "title_status": title_status_opacity,  # title_bar, status_bar (standalone)
+        "transparent": 0.0,  # panel, terminal, surface (fully transparent)
+    }
+
+
 def extract_colors(image_path, n_colors=20):
     """Extract dominant colors using k-means clustering"""
     img = Image.open(image_path).convert("RGB")
@@ -500,8 +618,8 @@ def generate_functional_palette(image_path, force_theme=None):
 
     # === BORDER COLORS ===
     # Borders should be subtle - close to background but with a hint of accent if compatible
-    BORDER_BLEND_COMPATIBLE = 0.70  # Blend toward accent if compatible
-    BORDER_BLEND_INCOMPATIBLE = 0.15  # Very subtle blend even if incompatible
+    BORDER_BLEND_COMPATIBLE = 0.50  # Blend toward accent if compatible
+    BORDER_BLEND_INCOMPATIBLE = 0.05  # Very subtle blend even if incompatible
 
     if is_dark_theme:
         # Dark mode: borders slightly lighter than background_light
@@ -912,9 +1030,14 @@ def print_palette(palette, is_dark_theme):
                 print(f"  {key:18} {c.hex}  (contrast: {contrast:.1f}:1)")
 
 
-def export_json(palette, filepath):
-    """Export palette as JSON with all 24 terminal colors"""
+def export_json(palette, filepath, blur_opacity=None):
+    """Export palette as JSON with all 24 terminal colors and blur opacity"""
     data = {k: v.hex for k, v in palette.items()}
+    if blur_opacity is not None:
+        data["_blur_opacity"] = {
+            "float": round(blur_opacity, 2),
+            "hex": opacity_to_hex(blur_opacity),
+        }
     data["_alpha_suggestion"] = {
         "background": "E6",
         "selection": "80",
@@ -1241,27 +1364,57 @@ def create_html_preview(palette, extracted_colors, output_path, is_dark_theme):
         f.write(html)
 
 
-def _build_zed_style(palette, is_dark):
-    """Build the style dict for a Zed theme from a palette."""
-    # Terminal foreground/dim_foreground are inverted (dim_fg shows low-contrast text)
-    term_fg = palette['foreground_bright']
-    term_dim_fg = palette['background']  # Inverted for low contrast
+def _build_zed_style(palette, is_dark, opacity=None):
+    """Build the style dict for a Zed theme from a palette.
 
-    return {
-        "border": f"{palette['border'].hex}ff",
-        "border.variant": f"{palette['border_variant'].hex}ff",
-        "border.focused": f"{palette['border_focused'].hex}ff",
+    Args:
+        palette: The color palette dict
+        is_dark: Whether this is a dark theme
+        opacity: Optional opacity value (0.0-1.0) for transparent blur theme.
+                 If None, creates opaque theme (ff alpha).
+    """
+    # Terminal foreground/dim_foreground are inverted (dim_fg shows low-contrast text)
+    term_fg = palette["foreground_bright"]
+    term_dim_fg = palette["background"]  # Inverted for low contrast
+
+    # Calculate opacity hex values using layered transparency system
+    if opacity is not None:
+        layers = calculate_layered_opacities(opacity)
+        target_alpha = opacity_to_hex(opacity)  # Full editor target
+        global_alpha = opacity_to_hex(layers["global"])
+        editor_alpha = opacity_to_hex(layers["editor_layer"])
+        tab_bar_alpha = opacity_to_hex(layers["tab_bar_layer"])
+        tab_alpha = opacity_to_hex(layers["tab_layer"])
+        title_status_alpha = opacity_to_hex(layers["title_status"])
+        transparent_alpha = "00"
+    else:
+        # Opaque theme - all fully opaque
+        target_alpha = "ff"
+        global_alpha = "ff"
+        editor_alpha = "ff"
+        tab_bar_alpha = "ff"
+        tab_alpha = "ff"
+        title_status_alpha = "ff"
+        transparent_alpha = "ff"
+
+    style = {
+        "border": f"{palette['border'].hex}{'ff' if opacity is None else opacity_to_hex(0.4)}",
+        "border.variant": f"{palette['border_variant'].hex}{'ff' if opacity is None else opacity_to_hex(0.4)}",
+        "border.focused": f"{palette['border_focused'].hex}{'ff' if opacity is None else opacity_to_hex(0.4)}",
         "border.selected": f"{palette['border_selected'].hex}ff",
         "border.transparent": f"#00000000",
         "border.disabled": f"{palette['border_disabled'].hex}ff",
-        "elevated_surface.background": f"{palette['background_medium'].hex}ff",
-        "surface.background": f"{palette['background_medium'].hex}ff",
-        "background": f"{palette['background_light'].hex}ff",
-        "element.background": f"{palette['element'].hex}ff",
-        "element.hover": f"{palette['element_hover'].hex}ff",
-        "element.active": f"{palette['element_active'].hex}ff",
-        "element.selected": f"{palette['element_selected'].hex}ff",
-        "element.disabled": f"{palette['element_disabled'].hex}ff",
+        # Elevated surfaces (popups) - use full target opacity
+        "elevated_surface.background": f"{palette['background_medium'].hex}{target_alpha}",
+        # Surface - transparent (inherits from global)
+        "surface.background": f"{palette['background_medium'].hex}{transparent_alpha}",
+        # Global background - base layer for panels
+        "background": f"{palette['background_light' if opacity is None else 'background_medium'].hex}{global_alpha}",
+        "element.background": f"{palette['element'].hex}{'ff' if opacity is None else transparent_alpha}",
+        "element.hover": f"{palette['element_hover'].hex}{'ff' if opacity is None else title_status_alpha}",
+        "element.active": f"{palette['element_active'].hex}{'ff' if opacity is None else title_status_alpha}",
+        "element.selected": f"{palette['element_selected'].hex}{'ff' if opacity is None else title_status_alpha}",
+        "element.disabled": f"{palette['element_disabled'].hex}{'ff' if opacity is None else title_status_alpha}",
         "drop_target.background": f"{palette['element_hover'].hex}80",
         "ghost_element.background": f"#00000000",
         "ghost_element.hover": f"{palette['element_hover'].hex}ff",
@@ -1278,26 +1431,30 @@ def _build_zed_style(palette, is_dark):
         "icon.disabled": f"{palette['foreground_dim'].hex}ff",
         "icon.placeholder": f"{palette['foreground'].hex}ff",
         "icon.accent": f"{palette['tertiary'].hex}ff",
-        "status_bar.background": f"{palette['background_light'].hex}ff",
-        "title_bar.background": f"{palette['background_light'].hex}ff",
-        "title_bar.inactive_background": f"{palette['background_disabled'].hex}ff",
-        "toolbar.background": f"{palette['background'].hex}ff",
-        "tab_bar.background": f"{palette['background_medium'].hex}ff",
-        "tab.inactive_background": f"{palette['background_medium'].hex}ff",
-        "tab.active_background": f"{palette['background'].hex}ff",
+        # Title/status bars - standalone, no stacking
+        "status_bar.background": f"{palette['background_light'].hex}{title_status_alpha}",
+        "title_bar.background": f"{palette['background_light'].hex}{title_status_alpha}",
+        "title_bar.inactive_background": f"{palette['background_disabled'].hex}{title_status_alpha}",
+        "toolbar.background": f"{palette['background'].hex}{editor_alpha}",
+        # Tab bar - stacks on global
+        "tab_bar.background": f"{palette['background_medium'].hex}{tab_bar_alpha}",
+        "tab.inactive_background": f"{palette['background_medium'].hex}{tab_alpha}",
+        "tab.active_background": f"{palette['background'].hex}{target_alpha}",
         "search.match_background": f"{palette['tertiary'].hex}66",
-        "panel.background": f"{palette['background_medium'].hex}ff",
+        # Panel - transparent (inherits global)
+        "panel.background": f"{palette['background_medium'].hex}{transparent_alpha}",
         "panel.focused_border": None,
         "pane.focused_border": None,
         "scrollbar.thumb.background": f"{palette['primary'].hex}4c",
         "scrollbar.thumb.hover_background": f"{palette['primary_variant'].hex}ff",
-        "scrollbar.thumb.border": f"{palette['primary_variant'].hex}ff",
+        "scrollbar.thumb.border": f"{palette['primary_variant'].hex}{'ff' if opacity is None else transparent_alpha}",
         "scrollbar.track.background": f"#00000000",
-        "scrollbar.track.border": f"{palette['primary'].hex}ff",
+        "scrollbar.track.border": f"{palette['primary'].hex}{'ff' if opacity is None else transparent_alpha}",
         "editor.foreground": f"{palette['foreground'].hex}ff",
-        "editor.background": f"{palette['background'].hex}ff",
-        "editor.gutter.background": f"{palette['background'].hex}ff",
-        "editor.subheader.background": f"{palette['background_medium'].hex}ff",
+        # Editor - stacks on global to reach target opacity
+        "editor.background": f"{palette['background'].hex}{editor_alpha}",
+        "editor.gutter.background": f"{palette['background'].hex}{editor_alpha}",
+        "editor.subheader.background": f"{palette['background_medium'].hex}{editor_alpha}",
         "editor.active_line.background": f"{palette['background_medium'].hex}bf",
         "editor.highlighted_line.background": f"{palette['background_medium'].hex}ff",
         "editor.line_number": f"{palette['foreground_dim'].hex}ff",
@@ -1308,7 +1465,8 @@ def _build_zed_style(palette, is_dark):
         "editor.active_wrap_guide": f"{palette['primary'].hex}1a",
         "editor.document_highlight.read_background": f"{palette['tertiary'].hex}1a",
         "editor.document_highlight.write_background": f"{palette['primary'].hex}66",
-        "terminal.background": f"{palette['background'].hex}ff",
+        # Terminal - transparent (inherits from editor which stacks on global)
+        "terminal.background": f"{palette['background'].hex}{transparent_alpha}",
         "terminal.foreground": f"{term_fg.hex}ff",
         "terminal.bright_foreground": f"{term_fg.hex}ff",
         "terminal.dim_foreground": f"{term_dim_fg.hex}ff",
@@ -1635,23 +1793,47 @@ def _build_zed_style(palette, is_dark):
         },
     }
 
+    # Add blur appearance for transparent themes
+    if opacity is not None:
+        style["background.appearance"] = "blurred"
 
-def generate_zed_themes(dark_palette, light_palette, theme_name):
-    """Generate a Zed theme JSON file with both dark and light variants."""
+    return style
+
+
+def generate_zed_themes(
+    dark_palette, light_palette, theme_name, dark_opacity=None, light_opacity=None
+):
+    """Generate a Zed theme JSON file with both dark and light variants.
+
+    Args:
+        dark_palette: The dark theme palette
+        light_palette: The light theme palette
+        theme_name: Base name for the theme
+        dark_opacity: Optional opacity for dark theme (0.0-1.0). If set, creates blur theme.
+        light_opacity: Optional opacity for light theme (0.0-1.0). If set, creates blur theme.
+    """
+    # Determine theme name suffix based on opacity
+    is_blur_theme = dark_opacity is not None or light_opacity is not None
+    name_suffix = " Blur" if is_blur_theme else ""
+
     theme_data = {
         "$schema": "https://zed.dev/schema/themes/v0.2.0.json",
-        "name": theme_name,
+        "name": f"{theme_name}{name_suffix}",
         "author": "Palette Generator",
         "themes": [
             {
-                "name": f"{theme_name} Dark",
+                "name": f"{theme_name} Dark{name_suffix}",
                 "appearance": "dark",
-                "style": _build_zed_style(dark_palette, is_dark=True),
+                "style": _build_zed_style(
+                    dark_palette, is_dark=True, opacity=dark_opacity
+                ),
             },
             {
-                "name": f"{theme_name} Light",
+                "name": f"{theme_name} Light{name_suffix}",
                 "appearance": "light",
-                "style": _build_zed_style(light_palette, is_dark=False),
+                "style": _build_zed_style(
+                    light_palette, is_dark=False, opacity=light_opacity
+                ),
             },
         ],
     }
@@ -1659,17 +1841,31 @@ def generate_zed_themes(dark_palette, light_palette, theme_name):
 
 
 def main():
+    import argparse
     import os
-    import sys
 
-    if len(sys.argv) < 2:
-        print("Usage: color-palette-generator <image_path> [output_directory]")
-        sys.exit(1)
-
-    image_path = sys.argv[1]
-    output_dir = (
-        sys.argv[2] if len(sys.argv) > 2 else os.path.dirname(image_path) or "."
+    parser = argparse.ArgumentParser(
+        description="Generate color palettes and Zed themes from images"
     )
+    parser.add_argument("image_path", help="Path to the source image")
+    parser.add_argument(
+        "output_dir",
+        nargs="?",
+        default=None,
+        help="Output directory (default: same as image)",
+    )
+    parser.add_argument(
+        "--opacity",
+        type=float,
+        default=None,
+        help="Override blur theme opacity (0.0-1.0). If not set, auto-calculates optimal value.",
+    )
+
+    args = parser.parse_args()
+
+    image_path = args.image_path
+    output_dir = args.output_dir or os.path.dirname(image_path) or "."
+    override_opacity = args.opacity
 
     os.makedirs(output_dir, exist_ok=True)
 
@@ -1710,9 +1906,18 @@ def main():
     light_report_path = os.path.join(output_dir, "readability_report-light.txt")
 
     zed_path = os.path.join(output_dir, f"{theme_name}.json")
+    zed_blur_path = os.path.join(output_dir, f"{theme_name}-blur.json")
+
+    # Calculate opacity for blur theme (needed for palette export too)
+    if override_opacity is not None:
+        dark_opacity = override_opacity
+        light_opacity = override_opacity
+    else:
+        dark_opacity = calculate_theme_opacity(dark_palette, is_dark_theme=True)
+        light_opacity = calculate_theme_opacity(light_palette, is_dark_theme=False)
 
     # Export dark theme files
-    export_json(dark_palette, dark_json_path)
+    export_json(dark_palette, dark_json_path, blur_opacity=dark_opacity)
     create_html_preview(
         dark_palette, dark_extracted, dark_html_path, is_dark_theme=True
     )
@@ -1720,17 +1925,28 @@ def main():
         f.write(dark_report)
 
     # Export light theme files
-    export_json(light_palette, light_json_path)
+    export_json(light_palette, light_json_path, blur_opacity=light_opacity)
     create_html_preview(
         light_palette, light_extracted, light_html_path, is_dark_theme=False
     )
     with open(light_report_path, "w") as f:
         f.write(light_report)
 
-    # Export combined Zed theme with both variants
+    # Export opaque Zed theme
     zed_theme = generate_zed_themes(dark_palette, light_palette, theme_name)
     with open(zed_path, "w") as f:
         f.write(zed_theme)
+
+    # Export blur Zed theme
+    zed_blur_theme = generate_zed_themes(
+        dark_palette,
+        light_palette,
+        theme_name,
+        dark_opacity=dark_opacity,
+        light_opacity=light_opacity,
+    )
+    with open(zed_blur_path, "w") as f:
+        f.write(zed_blur_theme)
 
     print("\n" + "=" * 60)
     print("Exported:")
@@ -1740,9 +1956,11 @@ def main():
     print(f"  - {light_json_path}")
     print(f"  - {light_html_path}")
     print(f"  - {light_report_path}")
+    print(f"  - {zed_path} (contains '{theme_name} Dark' and '{theme_name} Light')")
     print(
-        f"  - {zed_path} (contains both '{theme_name} Dark' and '{theme_name} Light')"
+        f"  - {zed_blur_path} (contains '{theme_name} Dark Blur' and '{theme_name} Light Blur')"
     )
+    print(f"\nBlur opacity: dark={dark_opacity:.2f}, light={light_opacity:.2f}")
     print("=" * 60)
 
 

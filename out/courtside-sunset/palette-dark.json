@@ -19,10 +19,10 @@
   "tertiary": "#f2e0a5",
   "muted": "#1d1415",
   "selection": "#b74c3e",
-  "border": "#6b3d3f",
-  "border_variant": "#6d3f43",
-  "border_focused": "#4f504a",
-  "border_selected": "#5a4d4c",
+  "border": "#5d373c",
+  "border_variant": "#633b41",
+  "border_focused": "#533e40",
+  "border_selected": "#573d40",
   "border_disabled": "#463538",
   "error": "#e28181",
   "warning": "#dca13b",
@@ -52,6 +52,10 @@
   "white": "#d3cdb7",
   "white_bright": "#ebe8de",
   "white_dim": "#b7b095",
+  "_blur_opacity": {
+    "float": 0.77,
+    "hex": "c3"
+  },
   "_alpha_suggestion": {
     "background": "E6",
     "selection": "80"
