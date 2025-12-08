@@ -506,21 +506,26 @@ def generate_functional_palette(image_path, force_theme=None):
     fg = ensure_contrast(fg_base, bg, bg_light, MIN_TEXT_CONTRAST, is_dark_theme)
     palette["foreground"] = fg
 
+    # Push foreground a bit lighter for dark themes
+    if is_dark_theme:
+        fg = adjust_color(fg, lightness_delta=5)
+    palette["foreground"] = fg
+
     # === FOREGROUND BRIGHT ===
     # Brighter than foreground for emphasis, headings, etc.
     if is_dark_theme:
-        fg_bright_base = adjust_color(fg, lightness_delta=8)
+        fg_bright_base = adjust_color(fg, lightness_delta=10)
     else:
-        fg_bright_base = adjust_color(fg, lightness_delta=-8)
+        fg_bright_base = adjust_color(fg, lightness_delta=-10)
     fg_bright = clamp_saturation(fg_bright_base, MAX_FG_SATURATION)
     palette["foreground_bright"] = fg_bright
 
     # === FOREGROUND MEDIUM ===
     # Intermediate between foreground and foreground_dim
     if is_dark_theme:
-        fg_medium_base = adjust_color(fg, lightness_delta=-6)
+        fg_medium_base = adjust_color(fg, lightness_delta=-3)
     else:
-        fg_medium_base = adjust_color(fg, lightness_delta=6)
+        fg_medium_base = adjust_color(fg, lightness_delta=4)
     fg_medium = ensure_contrast(
         fg_medium_base, bg, bg_light, MIN_TEXT_CONTRAST, is_dark_theme
     )
@@ -529,9 +534,9 @@ def generate_functional_palette(image_path, force_theme=None):
     # === FOREGROUND DIM ===
     # Start closer to fg, then ensure contrast - don't go too far from readable
     if is_dark_theme:
-        fg_dim_base = adjust_color(fg, lightness_delta=-12)
+        fg_dim_base = adjust_color(fg, lightness_delta=-8)
     else:
-        fg_dim_base = adjust_color(fg, lightness_delta=12)
+        fg_dim_base = adjust_color(fg, lightness_delta=10)
     fg_dim = ensure_contrast(fg_dim_base, bg, bg_light, MIN_DIM_CONTRAST, is_dark_theme)
     palette["foreground_dim"] = fg_dim
 
@@ -690,18 +695,27 @@ def generate_functional_palette(image_path, force_theme=None):
     # Using descriptive names: black, red, green, yellow, blue, magenta, cyan, white
     # Black should always be dark, white should always be light (regardless of theme)
 
-    # Black - always a dark color
+    # Black - always true grayscale dark colors
+    # Desaturate to ensure pure gray tones, distinct from white variants
+    # black_bright should stay below 50% lightness to remain distinct from white variants
     if is_dark_theme:
-        palette["black"] = bg  # Dark background
-        black_bright_base = adjust_color(bg, lightness_delta=30)
-        palette["black_dim"] = adjust_color(bg, lightness_delta=-10)
+        # Dark theme: black based on background lightness, but desaturated
+        black_lightness = bg.hsl[2]
+        palette["black"] = create_color(*hsl_to_rgb(0, 0, black_lightness))
+        # Cap black_bright at 40% to stay distinct from white (which starts at ~60%)
+        # Don't run through contrast check - black_bright is for highlights, not text
+        palette["black_bright"] = create_color(*hsl_to_rgb(0, 0, min(40, black_lightness + 20)))
+        palette["black_dim"] = create_color(*hsl_to_rgb(0, 0, max(3, black_lightness - 8)))
     else:
-        palette["black"] = fg  # Dark foreground
-        black_bright_base = adjust_color(fg, lightness_delta=10)
-        palette["black_dim"] = adjust_color(fg, lightness_delta=15)
-    palette["black_bright"] = ensure_terminal_contrast(
-        black_bright_base, bg, bg_light, MIN_TERMINAL_CONTRAST, is_dark_theme
-    )
+        # Light theme: black is dark (based on foreground)
+        black_lightness = fg.hsl[2]
+        palette["black"] = create_color(*hsl_to_rgb(0, 0, black_lightness))
+        palette["black_bright"] = create_color(*hsl_to_rgb(0, 0, min(30, black_lightness + 8)))
+        palette["black_dim"] = create_color(*hsl_to_rgb(0, 0, min(35, black_lightness + 12)))
+        # For light themes, ensure black variants meet contrast
+        palette["black_bright"] = ensure_terminal_contrast(
+            palette["black_bright"], bg, bg_light, MIN_TERMINAL_CONTRAST, is_dark_theme
+        )
 
     # Red - base=error, bright=lighter, dim=darker
     palette["red"] = palette["error"]
@@ -854,17 +868,24 @@ def generate_functional_palette(image_path, force_theme=None):
         is_dark_theme,
     )
 
-    # White - always a light color
+    # White - always true grayscale light colors
+    # Desaturate to ensure pure gray tones, distinct from black variants
     if is_dark_theme:
-        palette["white"] = fg_dim  # Light foreground
-        palette["white_bright"] = fg
-        white_dim_base = adjust_color(fg_dim, lightness_delta=-12, saturation_delta=-5)
+        # Dark theme: white should be noticeably light, push toward true white
+        white_lightness = fg_dim.hsl[2]
+        # Push white to at least 75%, and white_bright to at least 90%
+        palette["white"] = create_color(*hsl_to_rgb(0, 0, max(75, white_lightness)))
+        palette["white_bright"] = create_color(*hsl_to_rgb(0, 0, max(90, white_lightness + 12)))
+        palette["white_dim"] = create_color(*hsl_to_rgb(0, 0, max(60, white_lightness - 8)))
     else:
-        palette["white"] = bg  # Light background
-        palette["white_bright"] = adjust_color(bg, lightness_delta=5)
-        white_dim_base = adjust_color(bg, lightness_delta=-8, saturation_delta=-5)
+        # Light theme: white based on background lightness
+        white_lightness = bg.hsl[2]
+        palette["white"] = create_color(*hsl_to_rgb(0, 0, white_lightness))
+        palette["white_bright"] = create_color(*hsl_to_rgb(0, 0, min(97, white_lightness + 3)))
+        palette["white_dim"] = create_color(*hsl_to_rgb(0, 0, max(40, white_lightness - 25)))
+    # Ensure white_dim meets contrast requirements
     palette["white_dim"] = ensure_terminal_contrast(
-        white_dim_base,
+        palette["white_dim"],
         bg,
         bg_light,
         MIN_TERMINAL_CONTRAST,

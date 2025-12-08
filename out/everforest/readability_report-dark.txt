@@ -9,16 +9,16 @@ Background Light: #313b43 (L: 22.7%, S: 15.5%)
 
 FOREGROUND (bright) (min: 5.0:1)
 --------------------------------------------------
-  foreground_bright #c6c6c6  vs bg:  8.9:1  vs bg_light:  6.7:1  ✓
+  foreground_bright #d7d7d7  vs bg: 10.5:1  vs bg_light:  7.9:1  ✓
 
 FOREGROUND (main) (min: 5.0:1)
 --------------------------------------------------
-  foreground     #b2b2b2  vs bg:  7.1:1  vs bg_light:  5.4:1  ✓
-  foreground_medium #b0b0b0  vs bg:  7.0:1  vs bg_light:  5.3:1  ✓
+  foreground     #bebebe  vs bg:  8.1:1  vs bg_light:  6.1:1  ✓
+  foreground_medium #b6b6b6  vs bg:  7.5:1  vs bg_light:  5.6:1  ✓
 
 FOREGROUND (dim) (min: 4.0:1)
 --------------------------------------------------
-  foreground_dim #9a9a9a  vs bg:  5.4:1  vs bg_light:  4.1:1  ✓
+  foreground_dim #a9a9a9  vs bg:  6.4:1  vs bg_light:  4.9:1  ✓
 
 ACCENTS (min: 4.0:1)
 --------------------------------------------------
@@ -46,7 +46,7 @@ TERMINAL BASE (min: 4.0:1)
   blue           #61b0d8  vs bg:  6.3:1  vs bg_light:  4.7:1  ✓
   magenta        #d47fd4  vs bg:  5.6:1  vs bg_light:  4.2:1  ✓
   cyan           #3fbfbf  vs bg:  6.8:1  vs bg_light:  5.1:1  ✓
-  white          #9a9a9a  vs bg:  5.4:1  vs bg_light:  4.1:1  ✓
+  white          #bfbfbf  vs bg:  8.2:1  vs bg_light:  6.2:1  ✓
 
 TERMINAL BRIGHT (min: 4.0:1)
 --------------------------------------------------
@@ -56,7 +56,7 @@ TERMINAL BRIGHT (min: 4.0:1)
   blue_bright    #9ecee7  vs bg:  9.0:1  vs bg_light:  6.8:1  ✓
   magenta_bright #e7b8e7  vs bg:  8.9:1  vs bg_light:  6.8:1  ✓
   cyan_bright    #78d2d2  vs bg:  8.6:1  vs bg_light:  6.5:1  ✓
-  white_bright   #b2b2b2  vs bg:  7.1:1  vs bg_light:  5.4:1  ✓
+  white_bright   #e5e5e5  vs bg: 12.0:1  vs bg_light:  9.1:1  ✓
 
 TERMINAL DIM (min: 4.0:1)
 --------------------------------------------------

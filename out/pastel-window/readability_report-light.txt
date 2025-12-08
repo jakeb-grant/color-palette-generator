@@ -14,11 +14,11 @@ FOREGROUND (bright) (min: 5.0:1)
 FOREGROUND (main) (min: 5.0:1)
 --------------------------------------------------
   foreground     #090a0a  vs bg: 15.9:1  vs bg_light: 13.7:1  ✓
-  foreground_medium #171a1a  vs bg: 14.0:1  vs bg_light: 12.1:1  ✓
+  foreground_medium #121414  vs bg: 14.8:1  vs bg_light: 12.8:1  ✓
 
 FOREGROUND (dim) (min: 4.0:1)
 --------------------------------------------------
-  foreground_dim #252a2a  vs bg: 11.6:1  vs bg_light: 10.1:1  ✓
+  foreground_dim #212424  vs bg: 12.5:1  vs bg_light: 10.8:1  ✓
 
 ACCENTS (min: 4.0:1)
 --------------------------------------------------
@@ -46,7 +46,7 @@ TERMINAL BASE (min: 4.0:1)
   blue           #304851  vs bg:  7.7:1  vs bg_light:  6.7:1  ✓
   magenta        #a43503  vs bg:  5.4:1  vs bg_light:  4.7:1  ✓
   cyan           #304851  vs bg:  7.7:1  vs bg_light:  6.7:1  ✓
-  white          #e1e7e9  vs bg:  1.0:1  vs bg_light:  1.2:1  ✗ FAIL
+  white          #e4e4e4  vs bg:  1.0:1  vs bg_light:  1.1:1  ✗ FAIL
 
 TERMINAL BRIGHT (min: 4.0:1)
 --------------------------------------------------
@@ -56,7 +56,7 @@ TERMINAL BRIGHT (min: 4.0:1)
   blue_bright    #446674  vs bg:  4.9:1  vs bg_light:  4.3:1  ✓
   magenta_bright #b03801  vs bg:  4.9:1  vs bg_light:  4.3:1  ✓
   cyan_bright    #446674  vs bg:  4.9:1  vs bg_light:  4.3:1  ✓
-  white_bright   #eff2f3  vs bg:  1.1:1  vs bg_light:  1.3:1  ✗ FAIL
+  white_bright   #ececec  vs bg:  1.1:1  vs bg_light:  1.2:1  ✗ FAIL
 
 TERMINAL DIM (min: 4.0:1)
 --------------------------------------------------
@@ -66,7 +66,7 @@ TERMINAL DIM (min: 4.0:1)
   blue_dim       #50656d  vs bg:  4.9:1  vs bg_light:  4.2:1  ✓
   magenta_dim    #ac3e0b  vs bg:  4.9:1  vs bg_light:  4.2:1  ✓
   cyan_dim       #50656d  vs bg:  4.9:1  vs bg_light:  4.2:1  ✓
-  white_dim      #4f5f60  vs bg:  5.4:1  vs bg_light:  4.6:1  ✓
+  white_dim      #636363  vs bg:  4.8:1  vs bg_light:  4.2:1  ✓
 
 ======================================================================
 ISSUES FOUND: 6
@@ -74,6 +74,6 @@ ISSUES FOUND: 6
   - primary_variant: #de7a4e has 2.1:1, needs 4.0:1
   - secondary: #32ccae has 1.4:1, needs 4.0:1
   - secondary_variant: #278a76 has 2.9:1, needs 4.0:1
-  - white: #e1e7e9 has 1.0:1, needs 4.0:1
-  - white_bright: #eff2f3 has 1.1:1, needs 4.0:1
+  - white: #e4e4e4 has 1.0:1, needs 4.0:1
+  - white_bright: #ececec has 1.1:1, needs 4.0:1
 ======================================================================

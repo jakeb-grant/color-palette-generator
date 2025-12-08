@@ -9,16 +9,16 @@ Background Light: #cfd7dc (L: 83.7%, S: 15.7%)
 
 FOREGROUND (bright) (min: 5.0:1)
 --------------------------------------------------
-  foreground_bright #070707  vs bg: 16.0:1  vs bg_light: 13.8:1  ✓
+  foreground_bright #020202  vs bg: 16.5:1  vs bg_light: 14.2:1  ✓
 
 FOREGROUND (main) (min: 5.0:1)
 --------------------------------------------------
   foreground     #1c1c1c  vs bg: 13.5:1  vs bg_light: 11.7:1  ✓
-  foreground_medium #2b2b2b  vs bg: 11.3:1  vs bg_light:  9.7:1  ✓
+  foreground_medium #262626  vs bg: 12.0:1  vs bg_light: 10.4:1  ✓
 
 FOREGROUND (dim) (min: 4.0:1)
 --------------------------------------------------
-  foreground_dim #3a3a3a  vs bg:  9.0:1  vs bg_light:  7.8:1  ✓
+  foreground_dim #353535  vs bg:  9.8:1  vs bg_light:  8.4:1  ✓
 
 ACCENTS (min: 4.0:1)
 --------------------------------------------------
@@ -46,7 +46,7 @@ TERMINAL BASE (min: 4.0:1)
   blue           #1d5777  vs bg:  6.2:1  vs bg_light:  5.4:1  ✓
   magenta        #a035a0  vs bg:  4.8:1  vs bg_light:  4.1:1  ✓
   cyan           #246f6f  vs bg:  4.7:1  vs bg_light:  4.0:1  ✓
-  white          #e1e6e9  vs bg:  1.0:1  vs bg_light:  1.2:1  ✗ FAIL
+  white          #e4e4e4  vs bg:  1.0:1  vs bg_light:  1.1:1  ✗ FAIL
 
 TERMINAL BRIGHT (min: 4.0:1)
 --------------------------------------------------
@@ -56,7 +56,7 @@ TERMINAL BRIGHT (min: 4.0:1)
   blue_bright    #236a92  vs bg:  4.7:1  vs bg_light:  4.1:1  ✓
   magenta_bright #983198  vs bg:  5.2:1  vs bg_light:  4.5:1  ✓
   cyan_bright    #216868  vs bg:  5.1:1  vs bg_light:  4.4:1  ✓
-  white_bright   #eff2f3  vs bg:  1.1:1  vs bg_light:  1.3:1  ✗ FAIL
+  white_bright   #ececec  vs bg:  1.1:1  vs bg_light:  1.2:1  ✗ FAIL
 
 TERMINAL DIM (min: 4.0:1)
 --------------------------------------------------
@@ -66,11 +66,11 @@ TERMINAL DIM (min: 4.0:1)
   blue_dim       #2d6b8d  vs bg:  4.6:1  vs bg_light:  4.0:1  ✓
   magenta_dim    #923d92  vs bg:  5.1:1  vs bg_light:  4.4:1  ✓
   cyan_dim       #2a6565  vs bg:  5.3:1  vs bg_light:  4.6:1  ✓
-  white_dim      #4f5f60  vs bg:  5.3:1  vs bg_light:  4.6:1  ✓
+  white_dim      #636363  vs bg:  4.8:1  vs bg_light:  4.1:1  ✓
 
 ======================================================================
 ISSUES FOUND: 3
   - secondary: #926c71 has 3.1:1, needs 4.0:1
-  - white: #e1e6e9 has 1.0:1, needs 4.0:1
-  - white_bright: #eff2f3 has 1.1:1, needs 4.0:1
+  - white: #e4e4e4 has 1.0:1, needs 4.0:1
+  - white_bright: #ececec has 1.1:1, needs 4.0:1
 ======================================================================

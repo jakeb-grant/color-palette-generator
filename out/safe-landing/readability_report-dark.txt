@@ -13,12 +13,12 @@ FOREGROUND (bright) (min: 5.0:1)
 
 FOREGROUND (main) (min: 5.0:1)
 --------------------------------------------------
-  foreground     #fdfdfc  vs bg: 13.8:1  vs bg_light:  9.8:1  ✓
-  foreground_medium #f0f0e9  vs bg: 12.2:1  vs bg_light:  8.7:1  ✓
+  foreground     #ffffff  vs bg: 14.0:1  vs bg_light:  9.9:1  ✓
+  foreground_medium #f7f7f7  vs bg: 13.1:1  vs bg_light:  9.3:1  ✓
 
 FOREGROUND (dim) (min: 4.0:1)
 --------------------------------------------------
-  foreground_dim #e4e4d7  vs bg: 10.9:1  vs bg_light:  7.7:1  ✓
+  foreground_dim #eaeaea  vs bg: 11.6:1  vs bg_light:  8.3:1  ✓
 
 ACCENTS (min: 4.0:1)
 --------------------------------------------------
@@ -46,7 +46,7 @@ TERMINAL BASE (min: 4.0:1)
   blue           #b5d7e7  vs bg:  9.2:1  vs bg_light:  6.5:1  ✓
   magenta        #f88893  vs bg:  6.0:1  vs bg_light:  4.2:1  ✓
   cyan           #7ab6b8  vs bg:  6.1:1  vs bg_light:  4.4:1  ✓
-  white          #e4e4d7  vs bg: 10.9:1  vs bg_light:  7.7:1  ✓
+  white          #eaeaea  vs bg: 11.6:1  vs bg_light:  8.3:1  ✓
 
 TERMINAL BRIGHT (min: 4.0:1)
 --------------------------------------------------
@@ -56,7 +56,7 @@ TERMINAL BRIGHT (min: 4.0:1)
   blue_bright    #eef6f9  vs bg: 12.8:1  vs bg_light:  9.1:1  ✓
   magenta_bright #fcd0d4  vs bg: 10.1:1  vs bg_light:  7.1:1  ✓
   cyan_bright    #abd1d2  vs bg:  8.5:1  vs bg_light:  6.0:1  ✓
-  white_bright   #fdfdfc  vs bg: 13.8:1  vs bg_light:  9.8:1  ✓
+  white_bright   #ffffff  vs bg: 14.0:1  vs bg_light:  9.9:1  ✓
 
 TERMINAL DIM (min: 4.0:1)
 --------------------------------------------------
@@ -66,7 +66,7 @@ TERMINAL DIM (min: 4.0:1)
   blue_dim       #83b4cb  vs bg:  6.2:1  vs bg_light:  4.4:1  ✓
   magenta_dim    #f19199  vs bg:  6.2:1  vs bg_light:  4.4:1  ✓
   cyan_dim       #86adaf  vs bg:  5.7:1  vs bg_light:  4.1:1  ✓
-  white_dim      #c8c8b5  vs bg:  8.3:1  vs bg_light:  5.9:1  ✓
+  white_dim      #d5d5d5  vs bg:  9.5:1  vs bg_light:  6.8:1  ✓
 
 ======================================================================
 ISSUES FOUND: 3

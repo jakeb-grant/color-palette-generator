@@ -9,16 +9,16 @@ Background Light: #472c31 (L: 22.5%, S: 23.5%)
 
 FOREGROUND (bright) (min: 5.0:1)
 --------------------------------------------------
-  foreground_bright #faf9f7  vs bg: 15.2:1  vs bg_light: 11.9:1  ✓
+  foreground_bright #ffffff  vs bg: 16.0:1  vs bg_light: 12.6:1  ✓
 
 FOREGROUND (main) (min: 5.0:1)
 --------------------------------------------------
-  foreground     #ebe8de  vs bg: 13.0:1  vs bg_light: 10.2:1  ✓
-  foreground_medium #dfdaca  vs bg: 11.4:1  vs bg_light:  9.0:1  ✓
+  foreground     #f4f3ed  vs bg: 14.4:1  vs bg_light: 11.3:1  ✓
+  foreground_medium #eeece3  vs bg: 13.5:1  vs bg_light: 10.6:1  ✓
 
 FOREGROUND (dim) (min: 4.0:1)
 --------------------------------------------------
-  foreground_dim #d3cdb7  vs bg: 10.0:1  vs bg_light:  7.9:1  ✓
+  foreground_dim #e4e2d3  vs bg: 12.3:1  vs bg_light:  9.6:1  ✓
 
 ACCENTS (min: 4.0:1)
 --------------------------------------------------
@@ -46,7 +46,7 @@ TERMINAL BASE (min: 4.0:1)
   blue           #7d99c2  vs bg:  5.5:1  vs bg_light:  4.3:1  ✓
   magenta        #ea6b59  vs bg:  5.1:1  vs bg_light:  4.0:1  ✓
   cyan           #3fbfbf  vs bg:  7.2:1  vs bg_light:  5.6:1  ✓
-  white          #d3cdb7  vs bg: 10.0:1  vs bg_light:  7.9:1  ✓
+  white          #dbdbdb  vs bg: 11.6:1  vs bg_light:  9.1:1  ✓
 
 TERMINAL BRIGHT (min: 4.0:1)
 --------------------------------------------------
@@ -56,7 +56,7 @@ TERMINAL BRIGHT (min: 4.0:1)
   blue_bright    #b1c1da  vs bg:  8.8:1  vs bg_light:  6.9:1  ✓
   magenta_bright #f2a79c  vs bg:  8.2:1  vs bg_light:  6.4:1  ✓
   cyan_bright    #78d2d2  vs bg:  9.1:1  vs bg_light:  7.1:1  ✓
-  white_bright   #ebe8de  vs bg: 13.0:1  vs bg_light: 10.2:1  ✓
+  white_bright   #fafafa  vs bg: 15.3:1  vs bg_light: 12.0:1  ✓
 
 TERMINAL DIM (min: 4.0:1)
 --------------------------------------------------
@@ -66,7 +66,7 @@ TERMINAL DIM (min: 4.0:1)
   blue_dim       #869bb8  vs bg:  5.6:1  vs bg_light:  4.4:1  ✓
   magenta_dim    #e07366  vs bg:  5.2:1  vs bg_light:  4.1:1  ✓
   cyan_dim       #46a6a6  vs bg:  5.5:1  vs bg_light:  4.3:1  ✓
-  white_dim      #b7b095  vs bg:  7.4:1  vs bg_light:  5.8:1  ✓
+  white_dim      #c7c7c7  vs bg:  9.5:1  vs bg_light:  7.4:1  ✓
 
 ======================================================================
 ALL COLORS PASS CONTRAST REQUIREMENTS ✓
