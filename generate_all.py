@@ -42,7 +42,7 @@ def main():
 
         # Run the generator
         result = subprocess.run(
-            ["uv", "run", "color_palette_generator.py", str(image_path), str(theme_out_dir)],
+            ["uv", "run", "color-palette-generator", str(image_path), str(theme_out_dir)],
             cwd=root,
         )
 

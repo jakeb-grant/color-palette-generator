@@ -11,11 +11,11 @@ dependencies = [
 ]
 
 [project.scripts]
-color-palette-generator = "color_palette_generator:main"
+color-palette-generator = "color_palette_generator.cli:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["."]
+packages = ["color_palette_generator"]
