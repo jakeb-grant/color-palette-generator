@@ -1,0 +1,144 @@
+/* Main TUI application styles for Color Palette Generator */
+/* Muted styling to keep focus on the colors */
+
+Screen {
+    background: $background;
+}
+
+Header {
+    background: $surface;
+    color: $text-muted;
+}
+
+Footer {
+    background: $surface;
+}
+
+/* Main grid layout */
+#main-grid {
+    layout: grid;
+    grid-size: 2 2;
+    grid-columns: 1fr 1fr;
+    grid-rows: 1fr 1fr;
+    height: 100%;
+    padding: 0;
+}
+
+/* Consistent panel styling - muted borders */
+#image-panel,
+#color-list-panel,
+#contrast-panel,
+#role-panel {
+    margin: 0;
+}
+
+ImageSampler,
+ColorListView,
+ContrastReport,
+RolePanel {
+    border: solid $surface-lighten-1;
+    padding: 0 1;
+    height: 100%;
+}
+
+/* Color list */
+ColorListView {
+    scrollbar-gutter: stable;
+}
+
+ColorListView > Static.header {
+    text-style: bold;
+    color: $text-muted;
+}
+
+/* Color swatches */
+ColorSwatch {
+    height: 1;
+    padding: 0 1;
+}
+
+ColorSwatch:hover {
+    background: $surface-lighten-1;
+}
+
+ColorSwatch.selected {
+    background: $surface-lighten-2;
+}
+
+/* Contrast report */
+ContrastReport > Static.header {
+    text-style: bold;
+    color: $text-muted;
+}
+
+/* Role panel */
+RolePanel {
+    scrollbar-gutter: stable;
+}
+
+RolePanel > Static.title {
+    text-style: bold;
+    color: $text-muted;
+}
+
+RolePanel > Static.group-header {
+    color: $text-muted;
+    margin-top: 1;
+}
+
+/* Role slots */
+RoleSlot {
+    height: 1;
+    padding: 0 1;
+}
+
+RoleSlot:hover {
+    background: $surface-lighten-1;
+}
+
+RoleSlot.selected {
+    background: $surface-lighten-2;
+}
+
+RoleSlot.assigned {
+    border-left: thick $text-muted;
+}
+
+RoleSlot.contrast-fail {
+    border-left: thick $error;
+}
+
+/* Export modal */
+ExportScreen {
+    align: center middle;
+}
+
+#export-dialog {
+    width: 60;
+    height: auto;
+    max-height: 24;
+    border: solid $surface-lighten-1;
+    background: $surface;
+    padding: 1 2;
+}
+
+#export-dialog Label {
+    margin: 1 0 0 0;
+}
+
+#export-dialog Input {
+    margin: 0 0 1 0;
+}
+
+#export-dialog RadioSet {
+    margin: 1 0;
+}
+
+#export-dialog .buttons {
+    margin-top: 1;
+    height: 3;
+}
+
+#export-dialog .buttons Button {
+    margin: 0 1;
+}

@@ -4,9 +4,11 @@ Generate functional color palettes from images for Zed editor themes (and other 
 
 ## Features
 
+- **Interactive TUI** - Browse images, sample colors, assign roles, and preview in real-time
 - **Dual theme output** - Generates both dark and light themes from a single image
 - **Transparent blur themes** - Auto-generates blur variants with contrast-safe transparency
 - **WCAG contrast enforcement** - All text colors meet minimum contrast ratios
+- **Snap to real colors** - Replace k-means centroids with actual pixels from the image
 - **24 terminal colors** - Base, bright, and dim variants for full terminal support
 - **Smart border colors** - Blends toward accent colors when compatible, stays subtle when not
 - **Zed theme output** - Ready-to-use JSON theme files for Zed editor
@@ -64,6 +66,42 @@ This is useful for:
 - Re-exporting with different opacity values
 
 **Note:** When using `--from-palette`, only a single theme variant (dark or light) is generated, detected automatically from the palette's background luminance.
+
+### Interactive TUI
+
+Launch the interactive terminal interface to visually edit palettes:
+
+```bash
+# Open TUI with file browser
+color-palette-generator --tui
+
+# Open TUI with a specific image
+color-palette-generator my-wallpaper.png --tui
+
+# Open TUI with image and output directory
+color-palette-generator my-wallpaper.png --tui -o ./my-theme/
+```
+
+**TUI Features:**
+- **Image preview** - Block-character representation of the source image
+- **Click to sample** - Click on the image to pick colors directly
+- **Color list** - View all extracted colors with selection
+- **Role assignment** - Click a color, then click a role to assign it
+- **Contrast report** - Real-time WCAG contrast validation
+- **Snap to real** - Toggle between k-means centroids and actual image pixels
+
+**Key bindings:**
+
+| Key | Action |
+|-----|--------|
+| `g` | Regenerate palette |
+| `s` | Toggle snap-to-real colors |
+| `e` | Open export dialog |
+| `t` | Toggle dark/light mode |
+| `n` | Select new image |
+| `Enter` | Assign selected color to role |
+| `Escape` | Clear selection |
+| `q` | Quit |
 
 ## Output Files
 

@@ -38,8 +38,20 @@ def main():
         default=None,
         help="Override blur theme opacity (0.0-1.0). If not set, auto-calculates optimal value.",
     )
+    parser.add_argument(
+        "--tui",
+        action="store_true",
+        help="Launch interactive TUI for palette editing",
+    )
 
     args = parser.parse_args()
+
+    # Handle TUI mode
+    if args.tui:
+        if args.from_palette:
+            parser.error("Cannot use --tui with --from-palette")
+        _run_tui(args)
+        return
 
     # Validate arguments
     if args.from_palette:
@@ -247,6 +259,20 @@ def _run_from_image(args):
     )
     print(f"\nBlur opacity: dark={dark_opacity:.2f}, light={light_opacity:.2f}")
     print("=" * 60)
+
+
+def _run_tui(args):
+    """Launch the interactive TUI."""
+    from .tui import run_tui
+
+    image_path = args.image_path or ""
+    output_dir = args.output or ""
+    theme_name = args.name or ""
+
+    if image_path and not theme_name:
+        theme_name = os.path.splitext(os.path.basename(image_path))[0]
+
+    run_tui(image_path=image_path, output_dir=output_dir, theme_name=theme_name)
 
 
 if __name__ == "__main__":
